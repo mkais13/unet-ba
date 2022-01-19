@@ -3,7 +3,7 @@ from data import *
 import argparse
 
 #os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-
+#testcomment 
 
 parser = argparse.ArgumentParser(description='set Hyperparameters for training')
 parser.add_argument('--e' , '--epochs', type=int, metavar='', required=True, help='Number of Epochs')
