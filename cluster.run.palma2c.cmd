@@ -23,7 +23,7 @@
 #SBATCH --mail-user=moritz.kaiser@uni-muenster.de
 
 
-ml fosscuda/2019a
+module load fosscuda/2019a
 ml Singularity
 cd $HOME/unet
 singularity exec tensorflow_1.10.1-devel-gpu-py3.sif python {python_script}
