@@ -22,6 +22,7 @@
 
 #SBATCH --mail-user=moritz.kaiser@uni-muenster.de
 
+ml palma/2019a
 ml fosscuda/2019a
 ml Singularity
 singularity exec tensorflow:1.10.1-devel-gpu-py3.sif python {project_path}/{python_script}
