@@ -22,7 +22,7 @@
 
 #SBATCH --mail-user=moritz.kaiser@uni-muenster.de
 
-ml palma/2019a
+
 ml fosscuda/2019a
 ml Singularity
 cd $HOME/unet
