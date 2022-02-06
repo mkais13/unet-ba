@@ -10,6 +10,7 @@ parser.add_argument('--e' , '--epochs', type=int, metavar='', nargs='?', default
 parser.add_argument('--s' , '--steps', type=int, metavar='', nargs='?', default=300, const=300, help='Number of Steps per Epoch')
 parser.add_argument('--bs' , '--batchsize', type=int, metavar='',nargs='?', default=2, const=2, help='Batch Size')
 parser.add_argument('--lf' , '--lossfunction', metavar='',nargs='?', default='binary_crossentropy', const='binary_crossentropy', help='Loss Function for the Model')
+parser.add_argument('--opt' , '--optimizer', metavar='',nargs='?', default=Adam(lr = 1e-4), const=Adam(lr = 1e-4), help='Optimizer Function for the model')
 args = parser.parse_args()
 
 data_gen_args = dict(rotation_range=0.2,
@@ -24,9 +25,9 @@ data_gen_args = dict(rotation_range=0.2,
 myGene = trainGenerator(args.batchsize,'data/membrane/train','image','label',data_gen_args,save_to_dir = None)
 
 model = unet(args.lossfunction)
-#model_checkpoint = ModelCheckpoint('unet_membrane.hdf5', monitor='loss',verbose=1, save_best_only=True)
-#model.fit_generator(myGene,steps_per_epoch=args.steps,epochs=args.epochs,callbacks=[model_checkpoint])
-model.fit_generator(myGene,steps_per_epoch=args.steps,epochs=args.epochs)
+model_checkpoint = ModelCheckpoint('$WORK/checkpoints/unet_membranetest.hdf5', monitor='loss',verbose=1, save_best_only=True)
+model.fit_generator(myGene,steps_per_epoch=args.steps,epochs=args.epochs,callbacks=[model_checkpoint])
+#model.fit_generator(myGene,steps_per_epoch=args.steps,epochs=args.epochs)
 
 testGene = testGenerator("data/membrane/test")
 results = model.predict_generator(testGene,30,verbose=1)
