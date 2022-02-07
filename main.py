@@ -25,7 +25,7 @@ data_gen_args = dict(rotation_range=0.2,
 myGene = trainGenerator(args.batchsize,'data/membrane/train','image','label',data_gen_args,save_to_dir = None)
 
 model = unet(args.lossfunction)
-model_checkpoint = ModelCheckpoint('$WORK/checkpoints/unet_membranetest.hdf5', monitor='loss',verbose=1, save_best_only=True)
+model_checkpoint = ModelCheckpoint('/scratch/tmp/m_kais13/checkpoints/unet_membranetest', monitor='loss',verbose=1, save_best_only=False)
 model.fit_generator(myGene,steps_per_epoch=args.steps,epochs=args.epochs,callbacks=[model_checkpoint])
 #model.fit_generator(myGene,steps_per_epoch=args.steps,epochs=args.epochs)
 
