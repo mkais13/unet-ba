@@ -14,7 +14,7 @@
 
 #SBATCH --time={time}
 
-#SBATCH --job-name=kh03_{i}_{log_name}
+#SBATCH --job-name=mk13_{i}_{log_name}
 
 #SBATCH --output=/scratch/tmp/m_kais13/slogs/{log_name}.log
 
