@@ -26,7 +26,7 @@ data_gen_args = dict(rotation_range=0.2,
 myGene = trainGenerator(args.batchsize,'data/membrane/train','image','label',data_gen_args,save_to_dir = None)
 
 model = unet(args.lossfunction)
-dirpath = '$WORK/checkpoints'
+dirpath = '/$WORK/checkpoints'
 os.makedirs(dirpath, exist_ok=True)
 cb_checkpointer = ModelCheckpoint(filepath = os.path.join(dirpath, 'testtest.h5'), monitor = 'loss', save_best_only = True, mode = 'auto', verbose=1)
 #model_checkpoint = ModelCheckpoint("/scratch/tmp/m_kais13/checkpoints/unetmembranetest.h5", monitor='loss',verbose=1, save_best_only=False)
