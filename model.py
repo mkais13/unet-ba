@@ -10,7 +10,7 @@ from keras.callbacks import ModelCheckpoint, LearningRateScheduler
 from keras import backend as keras
 
 
-def unet(loss_function, pretrained_weights = None,input_size = (256,256,1)):
+def unet(loss_function, optimizer, learning_rate, pretrained_weights = None,input_size = (256,256,1)):
     inputs = Input(input_size)
     conv1 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(inputs)
     conv1 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv1)
@@ -54,7 +54,16 @@ def unet(loss_function, pretrained_weights = None,input_size = (256,256,1)):
 
     model = Model(input = inputs, output = conv10)
 
-    model.compile(optimizer = Adam(lr = 1e-4), loss = loss_function, metrics = ['accuracy'])
+    if optimizer == "Adagrad" :
+        optimizer_function = Adagrad(learning_rate)
+    elif loss_function == "SGD":
+        optimizer_function = SGD(learning_rate)
+    else:
+        optimizer_function = Adam(learning_rate)
+
+
+
+    model.compile(optimizer = optimizer_function, loss = loss_function, metrics = ['accuracy'])
     
     #model.summary()
 
