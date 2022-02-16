@@ -9,6 +9,49 @@ from keras.optimizers import *
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler
 from keras import backend as keras
 
+#custom loss functions
+
+def DiceBCELoss(targets, inputs, smooth=1e-6):    
+       
+    #flatten label and prediction tensors
+    inputs = K.flatten(inputs)
+    targets = K.flatten(targets)
+
+    BCE =  K.binary_crossentropy(targets, inputs)
+    intersection = K.sum(K.dot(targets, inputs))    
+    dice_loss = 1 - (2*intersection + smooth) / (K.sum(targets) + K.sum(inputs) + smooth)
+    Dice_BCE = BCE + dice_loss
+    
+    return Dice_BCE
+
+
+def IoULoss(targets, inputs, smooth=1e-6):
+    
+    #flatten label and prediction tensors
+    inputs = K.flatten(inputs)
+    targets = K.flatten(targets)
+    
+    intersection = K.sum(K.dot(targets, inputs))
+    total = K.sum(targets) + K.sum(inputs)
+    union = total - intersection
+    
+    IoU = (intersection + smooth) / (union + smooth)
+    return 1 - IoU
+
+ALPHA = 0.8
+GAMMA = 2
+
+def FocalLoss(targets, inputs, alpha=ALPHA, gamma=GAMMA):    
+    
+    inputs = K.flatten(inputs)
+    targets = K.flatten(targets)
+    
+    BCE = K.binary_crossentropy(targets, inputs)
+    BCE_EXP = K.exp(-BCE)
+    focal_loss = K.mean(alpha * K.pow((1-BCE_EXP), gamma) * BCE)
+    
+    return focal_loss
+
 
 def unet(loss_function, optimizer, learning_rate, pretrained_weights = None, input_size = (256,256,1)):
     inputs = Input(input_size)
@@ -61,6 +104,14 @@ def unet(loss_function, optimizer, learning_rate, pretrained_weights = None, inp
     else:
         optimizer_function = Adam(learning_rate)
 
+    #checks if its a custom loss-function or one provided by keras
+
+    if loss_function == "iou":
+        loss_function = IoULoss
+    elif loss_function == "dicebce":
+        loss_function == DiceBCELoss
+    elif loss_function == "focal":
+        loss_function == FocalLoss
 
 
     model.compile(optimizer = optimizer_function, loss = loss_function, metrics = ['accuracy'])
@@ -71,5 +122,4 @@ def unet(loss_function, optimizer, learning_rate, pretrained_weights = None, inp
     	model.load_weights(pretrained_weights)
 
     return model
-
 
