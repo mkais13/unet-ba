@@ -11,52 +11,39 @@ from keras import backend as keras
 
 #custom loss functions
 
-def DiceBCELoss(inputs, targets, smooth=None):    
-       
-    #flatten label and prediction tensors
-    inputs = K.flatten(inputs)
-    targets = K.flatten(targets)
-
-    BCE =  K.binary_crossentropy(targets, inputs)
-    intersection = K.sum(K.dot(targets, inputs))    
-    dice_loss = 1 - (2*intersection + smooth) / (K.sum(targets) + K.sum(inputs) + smooth)
-    Dice_BCE = BCE + dice_loss
-    
-    return Dice_BCE
 
 
-def dice_coef(y_true, y_pred, smooth=1):
+def DiceLoss(y_true, y_pred, smooth=None):
     y_true_f = K.flatten(y_true)
     y_pred_f = K.flatten(y_pred)
     intersection = K.sum(y_true_f * y_pred_f)
-    return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
+    return 1 - (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
+
+def DiceBCELoss(y_true, y_pred, smooth=None):
+    y_true_f = K.flatten(y_true)
+    y_pred_f = K.flatten(y_pred)
+    BCE =  K.binary_crossentropy(y_true_f, y_pred_f)
+    intersection = K.sum(y_true_f * y_pred_f)
+    dice_loss = 1 - (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
+    return BCE + dice_loss
 
 
-def IoULoss(targets, inputs, smooth=1e-6):
-    
-    #flatten label and prediction tensors
-    inputs = K.flatten(inputs)
-    targets = K.flatten(targets)
-    
-    intersection = K.sum(K.dot(targets, inputs))
-    total = K.sum(targets) + K.sum(inputs)
-    union = total - intersection
-    
-    IoU = (intersection + smooth) / (union + smooth)
-    return 1 - IoU
+def IoULoss(y_true, y_pred, smooth=1e-6):
+    y_true_f = K.flatten(y_true)
+    y_pred_f = K.flatten(y_pred)
+    intersection = K.sum(y_true_f * y_pred_f)
+    union = K.sum(y_true_f) + K.sum(y_pred_f) - intersection
+    return intersection/union
 
 ALPHA = 0.8
 GAMMA = 2
 
-def FocalLoss(targets, inputs, alpha=ALPHA, gamma=GAMMA):    
-    
-    inputs = K.flatten(inputs)
-    targets = K.flatten(targets)
-    
-    BCE = K.binary_crossentropy(targets, inputs)
+def FocalLoss(y_true, y_pred, alpha=ALPHA, gamma=GAMMA):    
+    y_true_f = K.flatten(y_true)
+    y_pred_f = K.flatten(y_pred)
+    BCE = K.binary_crossentropy(y_true_f, y_pred_f)
     BCE_EXP = K.exp(-BCE)
     focal_loss = K.mean(alpha * K.pow((1-BCE_EXP), gamma) * BCE)
-    
     return focal_loss
 
 
@@ -116,7 +103,7 @@ def unet(loss_function, optimizer, learning_rate, pretrained_weights = None, inp
     if loss_function == "iou":
         loss_function = IoULoss
     elif loss_function == "dicebce":
-        loss_function = dice_coef
+        loss_function = DiceBCELoss
     elif loss_function == "focal":
         loss_function = FocalLoss
 
