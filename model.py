@@ -11,28 +11,28 @@ from keras import backend as keras
 
 #custom loss functions
 
-def DiceBCELoss(y_true, y_pred, smooth=None):    
+def DiceBCELoss(inputs, targets, smooth=None):    
        
     #flatten label and prediction tensors
-    y_pred = K.flatten(y_pred)
-    y_true = K.flatten(y_true)
+    inputs = K.flatten(inputs)
+    targets = K.flatten(targets)
 
-    BCE =  K.binary_crossentropy(y_true, y_pred)
-    intersection = K.sum(K.dot(y_true, y_pred))    
-    dice_loss = 1 - (2*intersection + smooth) / (K.sum(y_true) + K.sum(y_pred) + smooth)
+    BCE =  K.binary_crossentropy(targets, inputs)
+    intersection = K.sum(K.dot(targets, inputs))    
+    dice_loss = 1 - (2*intersection + smooth) / (K.sum(targets) + K.sum(inputs) + smooth)
     Dice_BCE = BCE + dice_loss
     
     return Dice_BCE
 
 
-def IoULoss(y_true, y_pred, smooth=1e-6):
+def IoULoss(targets, inputs, smooth=1e-6):
     
     #flatten label and prediction tensors
-    y_pred = K.flatten(y_pred)
-    y_true = K.flatten(y_true)
+    inputs = K.flatten(inputs)
+    targets = K.flatten(targets)
     
-    intersection = K.sum(K.dot(y_true, y_pred))
-    total = K.sum(y_true) + K.sum(y_pred)
+    intersection = K.sum(K.dot(targets, inputs))
+    total = K.sum(targets) + K.sum(inputs)
     union = total - intersection
     
     IoU = (intersection + smooth) / (union + smooth)
@@ -41,12 +41,12 @@ def IoULoss(y_true, y_pred, smooth=1e-6):
 ALPHA = 0.8
 GAMMA = 2
 
-def FocalLoss(y_true, y_pred, alpha=ALPHA, gamma=GAMMA):    
+def FocalLoss(targets, inputs, alpha=ALPHA, gamma=GAMMA):    
     
-    y_pred = K.flatten(y_pred)
-    y_true = K.flatten(y_true)
+    inputs = K.flatten(inputs)
+    targets = K.flatten(targets)
     
-    BCE = K.binary_crossentropy(y_true, y_pred)
+    BCE = K.binary_crossentropy(targets, inputs)
     BCE_EXP = K.exp(-BCE)
     focal_loss = K.mean(alpha * K.pow((1-BCE_EXP), gamma) * BCE)
     
@@ -54,8 +54,8 @@ def FocalLoss(y_true, y_pred, alpha=ALPHA, gamma=GAMMA):
 
 
 def unet(loss_function, optimizer, learning_rate, pretrained_weights = None, input_size = (256,256,1)):
-    y_pred = Input(input_size)
-    conv1 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(y_pred)
+    inputs = Input(input_size)
+    conv1 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(inputs)
     conv1 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv1)
     pool1 = MaxPooling2D(pool_size=(2, 2))(conv1)
     conv2 = Conv2D(128, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(pool1)
@@ -95,7 +95,7 @@ def unet(loss_function, optimizer, learning_rate, pretrained_weights = None, inp
     conv9 = Conv2D(2, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv9)
     conv10 = Conv2D(1, 1, activation = 'sigmoid')(conv9)
 
-    model = Model(input = y_pred, output = conv10)
+    model = Model(input = inputs, output = conv10)
 
     if optimizer == "Adagrad" :
         optimizer_function = Adagrad(learning_rate)
