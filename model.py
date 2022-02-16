@@ -11,7 +11,7 @@ from keras import backend as keras
 
 #custom loss functions
 
-def DiceBCELoss(targets, inputs, smooth=1e-6):    
+def DiceBCELoss(targets, inputs, smooth=None):    
        
     #flatten label and prediction tensors
     inputs = K.flatten(inputs)
