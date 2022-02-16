@@ -10,8 +10,9 @@ parser = argparse.ArgumentParser(description='set Hyperparameters for training')
 parser.add_argument('-e' , '--epochs', type=int, metavar='epochs', nargs='?', default=5, const=5, help='Number of Epochs')
 parser.add_argument('-s' , '--steps', type=int, metavar='steps', nargs='?', default=300, const=300, help='Number of Steps per Epoch')
 parser.add_argument('-bs' , '--batchsize', type=int, metavar='batchsize',nargs='?', default=2, const=2, help='Batch Size')
-parser.add_argument('-lf' , '--lossfunction', metavar='lossfunction',nargs='?', default='binary_crossentropy', const='binary_crossentropy', help='Loss Function for the Model')
-parser.add_argument('-opt' , '--optimizer', metavar='optimizer',nargs='?', default=Adam(lr = 1e-4), const=Adam(lr = 1e-4), help='Optimizer Function for the model')
+parser.add_argument('-lf' , '--lossfunction', metavar='lossfunction',nargs='?', default='binary_crossentropy', const='binary_crossentropy', help='loss function for the Model')
+parser.add_argument('-opt' , '--optimizer', metavar='optimizer',nargs='?', default=Adam(lr = 1e-4), const=Adam(lr = 1e-4), help='optimizer function for the model')
+parser.add_argument('-lr' , '--learningrate', metavar='learningrate',nargs='?', default= 1e-4, const= 1e-4, help='learning rate for the model')
 args = parser.parse_args()
 
 data_gen_args = dict(rotation_range=0.2,
@@ -28,7 +29,7 @@ myGene = trainGenerator(args.batchsize,'data/membrane/train','image','label',dat
 model = unet(args.lossfunction)
 dirpath = '/scratch/tmp/m_kais13/checkpoints'
 os.makedirs(dirpath, exist_ok=True)
-cb_checkpointer = ModelCheckpoint(filepath = os.path.join(dirpath, 'testtest234.h5'), monitor = 'loss', save_best_only = True, mode = 'auto', verbose=1)
+cb_checkpointer = ModelCheckpoint(filepath = os.path.join(dirpath, 's{args.steps}_bs{args.batchsize}_lf{args.lossfunction}.h5'), monitor = 'loss', save_best_only = False, mode = 'auto', verbose=1)
 #model_checkpoint = ModelCheckpoint("/scratch/tmp/m_kais13/checkpoints/unetmembranetest.h5", monitor='loss',verbose=1, save_best_only=False)
 model.fit_generator(myGene,steps_per_epoch=args.steps,epochs=args.epochs,callbacks=[cb_checkpointer])
 #model.fit_generator(myGene,steps_per_epoch=args.steps,epochs=args.epochs)
