@@ -25,6 +25,13 @@ def DiceBCELoss(inputs, targets, smooth=None):
     return Dice_BCE
 
 
+def dice_coef(y_true, y_pred, smooth=1):
+    y_true_f = K.flatten(y_true)
+    y_pred_f = K.flatten(y_pred)
+    intersection = K.sum(y_true_f * y_pred_f)
+    return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
+
+
 def IoULoss(targets, inputs, smooth=1e-6):
     
     #flatten label and prediction tensors
@@ -109,7 +116,7 @@ def unet(loss_function, optimizer, learning_rate, pretrained_weights = None, inp
     if loss_function == "iou":
         loss_function = IoULoss
     elif loss_function == "dicebce":
-        loss_function = DiceBCELoss
+        loss_function = dice_coef
     elif loss_function == "focal":
         loss_function = FocalLoss
 
