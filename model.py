@@ -109,9 +109,9 @@ def unet(loss_function, optimizer, learning_rate, pretrained_weights = None, inp
     if loss_function == "iou":
         loss_function = IoULoss
     elif loss_function == "dicebce":
-        loss_function == DiceBCELoss
+        loss_function = DiceBCELoss
     elif loss_function == "focal":
-        loss_function == FocalLoss
+        loss_function = FocalLoss
 
 
     model.compile(optimizer = optimizer_function, loss = loss_function, metrics = ['accuracy'])
