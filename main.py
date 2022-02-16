@@ -12,7 +12,7 @@ parser.add_argument('-s' , '--steps', type=int, metavar='steps', nargs='?', defa
 parser.add_argument('-bs' , '--batchsize', type=int, metavar='batchsize',nargs='?', default=2, const=2, help='Batch Size')
 parser.add_argument('-lf' , '--lossfunction', metavar='lossfunction',nargs='?', default='binary_crossentropy', const='binary_crossentropy', help='loss function for the Model')
 parser.add_argument('-opt' , '--optimizer', metavar='optimizer',nargs='?', default="Adam", const="Adam", help='optimizer function for the model')
-parser.add_argument('-lr' , '--learningrate', metavar='learningrate',nargs='?', default= 1e-4, const= 1e-4, help='learning rate for the model')
+parser.add_argument('-lr' , '--learningrate' , type=float, metavar='learningrate',nargs='?', default= 1e-4, const= 1e-4, help='learning rate for the model')
 args = parser.parse_args()
 
 data_gen_args = dict(rotation_range=0.2,
