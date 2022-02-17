@@ -23,6 +23,7 @@ def DiceBCELoss(y_true, y_pred, smooth=0):
     y_true_f = K.flatten(y_true)
     y_pred_f = K.flatten(y_pred)
     BCE =  K.binary_crossentropy(y_true_f, y_pred_f)
+    print("BCE = {}".format(BCE))
     intersection = K.sum(y_true_f * y_pred_f)
     dice_loss = 1 - (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
     return BCE + dice_loss
@@ -103,7 +104,7 @@ def unet(loss_function, optimizer, learning_rate, pretrained_weights = None, inp
     if loss_function == "iou":
         loss_function = IoULoss
     elif loss_function == "dicebce":
-        loss_function = DiceLoss
+        loss_function = DiceBCELoss
     elif loss_function == "focal":
         loss_function = FocalLoss
 
