@@ -22,11 +22,15 @@ def DiceLoss(y_true, y_pred, smooth=0):
 def DiceBCELoss(y_true, y_pred, smooth=0):
     y_true_f = K.flatten(y_true)
     y_pred_f = K.flatten(y_pred)
+    print("Shape flat true: {}".format(tf.shape(y_true_f)))
+    print("Shape flat pred: {}".format(tf.shape(y_pred_f)))
+    print("Shape true: {}".format(tf.shape(y_true)))
+    print("Shape pred: {}".format(tf.shape(y_pred)))
     BCE =  K.binary_crossentropy(y_true_f, y_pred_f)
     print("BCE = {}".format(BCE))
     intersection = K.sum(y_true_f * y_pred_f)
     dice_loss = 1 - (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
-    return BCE + dice_loss
+    return BCE.numpy() + dice_loss
 
 
 def IoULoss(y_true, y_pred, smooth=1e-6):
