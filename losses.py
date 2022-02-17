@@ -6,6 +6,7 @@ import numpy as np
 import tensorflow as tf
 import tensorflow.keras.backend as K
 
+
 def _crps_tf(y_true, y_pred, factor=0.05):
     
     '''
@@ -231,7 +232,7 @@ def focal_tversky(y_true, y_pred, alpha=0.5, gamma=4/3, const=K.epsilon()):
     y_true = tf.squeeze(y_true)
     
     # (Tversky loss)**(1/gamma) 
-    loss_val = tf.math.pow((1-tversky_coef(y_true, y_pred, alpha=alpha, const=const)), 1/gamma)
+    loss_val = tf.pow((1-tversky_coef(y_true, y_pred, alpha=alpha, const=const)), 1/gamma)
     
     return loss_val
 
@@ -456,5 +457,5 @@ def triplet_1d(y_true, y_pred, N, margin=5.0):
     
     return loss_val
 
-   
+
 

@@ -94,7 +94,7 @@ def unet(loss_function, optimizer, learning_rate, pretrained_weights = None, inp
     #checks if its a custom loss-function or one provided by keras
 
     if loss_function == "iou":
-        loss_function = losses.iou_seg
+        loss_function = IoULoss
     elif loss_function == "dice":
         loss_function = losses.dice
     elif loss_function == "focal":
@@ -102,7 +102,7 @@ def unet(loss_function, optimizer, learning_rate, pretrained_weights = None, inp
     elif loss_function == "tversky":
         loss_function = losses.tversky
     elif loss_function == "mssim":
-        loss_function = losses.ms_ssim
+        loss_function = losses.ms_ssim(max_val=256)
     elif loss_function == "focal_tversky":
         loss_function = losses.focal_tversky
 
