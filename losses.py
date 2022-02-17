@@ -265,7 +265,7 @@ def ms_ssim(y_true, y_pred, **kwargs):
     y_pred = tf.squeeze(y_pred)
     y_true = tf.squeeze(y_true)
     
-    tf_ms_ssim = tf.image.ssim_multiscale(y_true, y_pred, **kwargs)
+    tf_ms_ssim = tf.image.ssim_multiscale(y_true, y_pred, max_val=256, **kwargs)
         
     return 1 - tf_ms_ssim
 
