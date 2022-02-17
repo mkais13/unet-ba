@@ -102,7 +102,7 @@ def unet(loss_function, optimizer, learning_rate, pretrained_weights = None, inp
     elif loss_function == "tversky":
         loss_function = losses.tversky
     elif loss_function == "mssim":
-        loss_function = losses.ms_ssim(max_val=256)
+        loss_function = losses.ms_ssim
     elif loss_function == "focal_tversky":
         loss_function = losses.focal_tversky
 
