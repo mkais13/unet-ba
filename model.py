@@ -8,7 +8,7 @@ from keras.layers import *
 from keras.optimizers import *
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler
 from keras import backend as keras
-
+import losses
 #custom loss functions
 
 
@@ -19,18 +19,6 @@ def DiceLoss(y_true, y_pred, smooth=0):
     intersection = K.sum(y_true_f * y_pred_f)
     return 1 - (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
 
-def DiceBCELoss(y_true, y_pred, smooth=0):
-    y_true_f = K.flatten(y_true)
-    y_pred_f = K.flatten(y_pred)
-    print("Shape flat true: {}".format(tf.shape(y_true_f)))
-    print("Shape flat pred: {}".format(tf.shape(y_pred_f)))
-    print("Shape true: {}".format(tf.shape(y_true)))
-    print("Shape pred: {}".format(tf.shape(y_pred)))
-    BCE =  K.binary_crossentropy(y_true_f, y_pred_f)
-    print("BCE = {}".format(BCE))
-    intersection = K.sum(y_true_f * y_pred_f)
-    dice_loss = 1 - (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
-    return BCE.numpy() + dice_loss
 
 
 def IoULoss(y_true, y_pred, smooth=1e-6):
@@ -106,11 +94,17 @@ def unet(loss_function, optimizer, learning_rate, pretrained_weights = None, inp
     #checks if its a custom loss-function or one provided by keras
 
     if loss_function == "iou":
-        loss_function = IoULoss
-    elif loss_function == "dicebce":
-        loss_function = DiceBCELoss
+        loss_function = losses.iou_seg
+    elif loss_function == "dice":
+        loss_function = losses.dice
     elif loss_function == "focal":
         loss_function = FocalLoss
+    elif loss_function == "tversky":
+        loss_function = losses.tversky
+    elif loss_function == "mssim":
+        loss_function = losses.ms_ssim
+    elif loss_function == "focal_tversky":
+        loss_function = losses.focal_tversky
 
 
     model.compile(optimizer = optimizer_function, loss = loss_function, metrics = ['accuracy'])
