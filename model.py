@@ -39,7 +39,7 @@ def FocalLoss(y_true, y_pred, alpha=ALPHA, gamma=GAMMA):
     return focal_loss
 
 
-def unet(loss_function, optimizer, learning_rate, topology_factor, pretrained_weights = None, input_size = (256,256,2)):
+def unet(loss_function, optimizer, learning_rate, topology_factor, pretrained_weights = None, input_size = (256,256,1)):
     inputs = Input(input_size)
     conv1 = Conv2D(int(64 * topology_factor), 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(inputs)
     conv1 = Conv2D(int(64* topology_factor), 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv1)
@@ -79,7 +79,7 @@ def unet(loss_function, optimizer, learning_rate, topology_factor, pretrained_we
     conv9 = Conv2D(int(64* topology_factor), 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(merge9)
     conv9 = Conv2D(int(64* topology_factor), 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv9)
     conv9 = Conv2D(int(2* topology_factor), 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv9)
-    conv10 = Conv2D(int(1* topology_factor), 1, activation = 'sigmoid')(conv9)
+    conv10 = Conv2D(1, 1, activation = 'sigmoid')(conv9)
 
     model = Model(input = inputs, output = conv10)
 
