@@ -1,6 +1,4 @@
 import os
-from matplotlib.cbook import ls_mapper
-import numpy
 import paramiko #library für ssh
 from datetime import datetime
 
@@ -22,7 +20,7 @@ SLURM_SCRIPTS = [
 def get_ssh_connection(host):
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(host, username='m_kais13', pkey=paramiko.RSAKey.from_private_key_file("C:/Users/momok/.ssh/id_rsa"))
+    ssh.connect(host, username='m_kais13', pkey=paramiko.RSAKey.from_private_key_file("C:/Users/mkaiser/.ssh/id_rsaoldformat"))
     return ssh
 
  
@@ -54,34 +52,23 @@ optimizers = [
     "Adam"
 ]
 
-learningrates = []
-for i in range(8):
-    learningrates.append(1/(numpy.ma.power(10,i)))
 
-stepsizes = []
-for i in range(20):
-    stepsizes.append(i*25)
+batchsizes = [3, 10, 30]
 
-batchsizes = []
-for i in range(20):
-    batchsizes.append(i)
+num_images = 30
+
 
 lossfunctions = [
+    "mean_squared_error",
     "binary_crossentropy",
-    "dice",
-    "focal",
-    "iou",
-    "tversky",
     "focal_tversky"
 ]
 
-for opt in optimizers:
-    for lr in learningrates:
-        for s in stepsizes:
-            for bs in batchsizes:
-                for lf in lossfunctions:
-                    commands.append("main.py -e 5 -s {0} -bs {1} -lr {2} -lf {3} -opt {4}".format(s,bs,lr,lf,opt))
-
+#for opt in optimizers:
+#        for bs in batchsizes:
+#            for lf in lossfunctions:
+#                commands.append("main.py -e 10 -bs {0} -lf {1} -opt {2}".format(bs,lf,opt))
+commands.append("main.py -e 10 -bs {0} -lf {1} -opt {2}".format(3,"mean_squared_error","Adam"))
 
 
 ssh = get_ssh_connection(HOSTS[0])
