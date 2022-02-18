@@ -68,7 +68,7 @@ lossfunctions = [
 #        for bs in batchsizes:
 #            for lf in lossfunctions:
 #                commands.append("main.py -e 10 -bs {0} -lf {1} -opt {2}".format(bs,lf,opt))
-commands.append("main.py -e 10 -bs {0} -lf {1} -opt {2}".format(3,"mean_squared_error","Adam"))
+commands.append("main.py -e 10 -bs {0} -lf {1} -opt {2} -tf {3}".format(3,"mean_squared_error","Adam",2))
 
 
 ssh = get_ssh_connection(HOSTS[0])

@@ -13,6 +13,7 @@ parser.add_argument('-bs' , '--batchsize', type=int, metavar='batchsize',nargs='
 parser.add_argument('-lf' , '--lossfunction', metavar='lossfunction',nargs='?', default='binary_crossentropy', const='binary_crossentropy', help='loss function for the Model')
 parser.add_argument('-opt' , '--optimizer', metavar='optimizer',nargs='?', default="Adam", const="Adam", help='optimizer function for the model')
 parser.add_argument('-lr' , '--learningrate' , type=float, metavar='learningrate',nargs='?', default= 1e-4, const= 1e-4, help='learning rate for the model')
+parser.add_argument('-tf' , '--topologyfactor', type=float, metavar='topologyfactor',nargs='?', default=1, const=1, help='')
 args = parser.parse_args()
 
 data_gen_args = dict(rotation_range=0.2,
@@ -26,7 +27,7 @@ data_gen_args = dict(rotation_range=0.2,
 
 myGene = trainGenerator(args.batchsize,'data/membrane/train','image','label',data_gen_args,save_to_dir = None)
 
-model = unet(args.lossfunction, args.optimizer, args.learningrate)
+model = unet(args.lossfunction, args.optimizer, args.learningrate, args.topologyfactor)
 dirpath = '/scratch/tmp/m_kais13/checkpoints'
 os.makedirs(dirpath, exist_ok=True)
 filename = 'bs{0}-lf{1}-opt{2}-lr{3}.h5'.format(args.batchsize,args.lossfunction,args.optimizer,args.learningrate)
