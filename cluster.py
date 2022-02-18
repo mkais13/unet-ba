@@ -1,6 +1,10 @@
 import os
+from matplotlib.cbook import ls_mapper
+import numpy
 import paramiko #library für ssh
 from datetime import datetime
+
+
 
 HOSTS = [
     'palma2c.uni-muenster.de'
@@ -18,10 +22,10 @@ SLURM_SCRIPTS = [
 def get_ssh_connection(host):
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(host, username='m_kais13', pkey=paramiko.RSAKey.from_private_key_file("/home/momok/.ssh/id_rsa"))
+    ssh.connect(host, username='m_kais13', pkey=paramiko.RSAKey.from_private_key_file("C:/Users/momok/.ssh/id_rsa"))
     return ssh
 
-
+ 
 def submit_python_script(ssh, host, slurm_script, project_path, command, tasks_per_node=16, mem=32, partition='normal', time='8:00:00', git_push=False):
     cmd_template = open(slurm_script, 'r').read()
     if git_push:
@@ -37,18 +41,52 @@ def submit_python_script(ssh, host, slurm_script, project_path, command, tasks_p
     stdin, stdout, stderr = ssh.exec_command('echo "{}" | tee $HOME/jobs/run.cmd'.format(cmd))
     stdout.readlines()
     stdin, stdout, stderr = ssh.exec_command('sbatch $HOME/jobs/run.cmd')
-    print(stdout.readlines())
+    print(stdout.readlines()) 
     stdin, stdout, stderr = ssh.exec_command('squeue | grep m_kais13')
     print("submitted {} jobs".format(len(stdout.readlines())))
 
+ 
+commands = []
 
-commands = [
-   "main.py"
+optimizers = [
+    "Adagrad",
+    "SGD",
+    "Adam"
 ]
+
+learningrates = []
+for i in range(8):
+    learningrates.append(1/(numpy.ma.power(10,i)))
+
+stepsizes = []
+for i in range(20):
+    stepsizes.append(i*25)
+
+batchsizes = []
+for i in range(20):
+    batchsizes.append(i)
+
+lossfunctions = [
+    "binary_crossentropy",
+    "dice",
+    "focal",
+    "iou",
+    "tversky",
+    "focal_tversky"
+]
+
+for opt in optimizers:
+    for lr in learningrates:
+        for s in stepsizes:
+            for bs in batchsizes:
+                for lf in lossfunctions:
+                    commands.append("main.py -e 5 -s {0} -bs {1} -lr {2} -lf {3} -opt {4}".format(s,bs,lr,lf,opt))
+
+
 
 ssh = get_ssh_connection(HOSTS[0])
 for i, c in enumerate(commands):
-    submit_python_script(ssh, HOSTS[0], SLURM_SCRIPTS[0], PROJECT_PATHS[0], c, tasks_per_node=8, mem=32, partition='gpu2080', git_push=True if i == 0 else False, time='24:00:00')
+    submit_python_script(ssh, HOSTS[0], SLURM_SCRIPTS[0], PROJECT_PATHS[0], c, tasks_per_node=8, mem=32, partition='gpu2080', git_push=True if i == 0 else False, time='0:20:00')
 ssh.close()
 
     # os.system("python train.py {}".format(c))
