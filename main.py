@@ -30,7 +30,7 @@ myGene = trainGenerator(args.batchsize,'data/membrane/train','image','label',dat
 model = unet(args.lossfunction, args.optimizer, args.learningrate, args.topologyfactor)
 dirpath = '/scratch/tmp/m_kais13/checkpoints'
 os.makedirs(dirpath, exist_ok=True)
-filename = 'bs{0}-lf{1}-opt{2}-lr{3}.h5'.format(args.batchsize,args.lossfunction,args.optimizer,args.learningrate)
+filename = 'bs{0}-lf{1}-opt{2}-lr{3}-tf{4}.h5'.format(args.batchsize,args.lossfunction,args.optimizer,args.learningrate, args.topologyfactor)
 cb_checkpointer = ModelCheckpoint(filepath = os.path.join(dirpath, filename), monitor = 'loss', save_best_only = False, mode = 'auto', verbose=1)
 #model_checkpoint = ModelCheckpoint("/scratch/tmp/m_kais13/checkpoints/unetmembranetest.h5", monitor='loss',verbose=1, save_best_only=False)
 num_images = 30
