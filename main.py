@@ -23,22 +23,19 @@ data_gen_args = dict(rotation_range=0.2,
                     zoom_range=0.05,
                     horizontal_flip=True,
                     fill_mode='nearest')
+                
 
 
 myGene = trainGenerator(args.batchsize,'data/membrane/train','image','label',data_gen_args,save_to_dir = None)
 
-keras.get_session().run(tf.global_variables_initializer())
 model = unet(args.lossfunction, args.optimizer, args.topologyfactor)
 dirpath = '/scratch/tmp/m_kais13/checkpoints'
 os.makedirs(dirpath, exist_ok=True)
 filename = 'bs{0}-lf{1}-opt{2}-tf{3}.h5'.format(args.batchsize,args.lossfunction,args.optimizer, args.topologyfactor)
-cb_reduceLR = tf.keras.callbacks.ReduceLROnPlateau(monitor='loss', factor=0.1, patience=2,
-                              verbose=0, mode='auto', min_delta=0.0001,
-                              cooldown=0, min_lr=0)
 cb_checkpointer = ModelCheckpoint(filepath = os.path.join(dirpath, filename), monitor = 'loss', save_best_only = False, mode = 'auto', verbose=1)
 #model_checkpoint = ModelCheckpoint("/scratch/tmp/m_kais13/checkpoints/unetmembranetest.h5", monitor='loss',verbose=1, save_best_only=False)
 num_images = 30
-model.fit_generator(myGene,steps_per_epoch=(num_images/args.batchsize),epochs=args.epochs,callbacks=[cb_checkpointer,cb_reduceLR])
+model.fit_generator(myGene,steps_per_epoch=(num_images/args.batchsize),epochs=args.epochs,callbacks=[cb_checkpointer])
 #init_op = tf.initialize_all_variables()
 
 #model.fit_generator(myGene,steps_per_epoch=args.steps,epochs=args.epochs)

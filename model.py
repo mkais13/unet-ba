@@ -83,12 +83,14 @@ def unet(loss_function, optimizer, topology_factor, pretrained_weights = None, i
 
     model = Model(input = inputs, output = conv10)
 
+    lr_schedule = tf.keras.callbacks.LearningRateScheduler
+
     if optimizer == "Adagrad" :
         optimizer_function = Adagrad(1e-2)
     elif loss_function == "SGD":
         optimizer_function = SGD(1e-2)
     else:
-        optimizer_function = Adam(lr=1e-2)
+        optimizer_function = Adam(1e-2)
 
     #checks if its a custom loss-function or one provided by keras
 
