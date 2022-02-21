@@ -55,20 +55,22 @@ optimizers = [
 
 batchsizes = [3, 10, 30]
 
-num_images = 30
-
-
 lossfunctions = [
     "mean_squared_error",
     "binary_crossentropy",
     "focal_tversky"
 ]
 
+kernelinitializer = [
+    "he_normal",
+    "he_uniform",
+]
+
 #for opt in optimizers:
 #        for bs in batchsizes:
 #            for lf in lossfunctions:
 #                commands.append("main.py -e 10 -bs {0} -lf {1} -opt {2}".format(bs,lf,opt))
-commands.append("main.py -e 10 -bs {0} -lf {1} -opt {2} -tf {3}".format(3,"mean_squared_error","Adagrad",2))
+commands.append("main.py -e 10 -bs {0} -lf {1} -opt {2} -tf {3} -ki {4}".format(3,"mean_squared_error","Adagrad",2,"he_uniform"))
 
 
 ssh = get_ssh_connection(HOSTS[0])
