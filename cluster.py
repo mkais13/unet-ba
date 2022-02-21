@@ -70,7 +70,7 @@ kernelinitializer = [
 #        for bs in batchsizes:
 #            for lf in lossfunctions:
 #                commands.append("main.py -e 10 -bs {0} -lf {1} -opt {2}".format(bs,lf,opt))
-commands.append("main.py -e 10 -bs {0} -lf {1} -opt {2} -tf {3} -ki {4}".format(3,"mean_squared_error","Adagrad",2,"he_uniform"))
+commands.append("main.py -e 5 -bs {0} -lf {1} -opt {2} -tf {3} -ki {4}".format(3,"mean_squared_error","Adagrad",2,"he_uniform"))
 
 
 ssh = get_ssh_connection(HOSTS[0])
