@@ -20,7 +20,7 @@ SLURM_SCRIPTS = [
 def get_ssh_connection(host):
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(host, username='m_kais13', pkey=paramiko.RSAKey.from_private_key_file("C:/Users/mkaiser/.ssh/id_rsaoldformat"))
+    ssh.connect(host, username='m_kais13', pkey=paramiko.RSAKey.from_private_key_file("C:/Users/momok/.ssh/id_rsa"))
     return ssh
 
  
@@ -68,7 +68,7 @@ lossfunctions = [
 #        for bs in batchsizes:
 #            for lf in lossfunctions:
 #                commands.append("main.py -e 10 -bs {0} -lf {1} -opt {2}".format(bs,lf,opt))
-commands.append("main.py -e 10 -bs {0} -lf {1} -opt {2} -tf {3}".format(3,"mean_squared_error","Adam",2))
+commands.append("main.py -e 1 -bs {0} -lf {1} -opt {2} -tf {3}".format(3,"mean_squared_error","Adam",2))
 
 
 ssh = get_ssh_connection(HOSTS[0])
