@@ -27,6 +27,7 @@ data_gen_args = dict(rotation_range=0.2,
 
 myGene = trainGenerator(args.batchsize,'data/membrane/train','image','label',data_gen_args,save_to_dir = None)
 
+keras.get_session().run(tf.global_variables_initializer())
 model = unet(args.lossfunction, args.optimizer, args.topologyfactor)
 dirpath = '/scratch/tmp/m_kais13/checkpoints'
 os.makedirs(dirpath, exist_ok=True)
@@ -37,7 +38,7 @@ cb_checkpointer = ModelCheckpoint(filepath = os.path.join(dirpath, filename), mo
 num_images = 30
 model.fit_generator(myGene,steps_per_epoch=(num_images/args.batchsize),epochs=args.epochs,callbacks=[cb_checkpointer,cb_reduceLR])
 #init_op = tf.initialize_all_variables()
-keras.get_session().run(tf.global_variables_initializer())
+
 #model.fit_generator(myGene,steps_per_epoch=args.steps,epochs=args.epochs)
 #model.save("/scratch/tmp/m_kais13/checkpoints/unetmembranetest")
 
