@@ -36,7 +36,8 @@ cb_checkpointer = ModelCheckpoint(filepath = os.path.join(dirpath, filename), mo
 #model_checkpoint = ModelCheckpoint("/scratch/tmp/m_kais13/checkpoints/unetmembranetest.h5", monitor='loss',verbose=1, save_best_only=False)
 num_images = 30
 model.fit_generator(myGene,steps_per_epoch=(num_images/args.batchsize),epochs=args.epochs,callbacks=[cb_checkpointer,cb_reduceLR])
-init_op = tf.initialize_all_variables()
+#init_op = tf.initialize_all_variables()
+keras.get_session().run(tf.global_variables_initializer())
 #model.fit_generator(myGene,steps_per_epoch=args.steps,epochs=args.epochs)
 #model.save("/scratch/tmp/m_kais13/checkpoints/unetmembranetest")
 
