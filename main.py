@@ -12,7 +12,7 @@ parser.add_argument('-e' , '--epochs', type=int, metavar='epochs', nargs='?', de
 parser.add_argument('-bs' , '--batchsize', type=int, metavar='batchsize',nargs='?', default=2, const=2, help='Batch Size')
 parser.add_argument('-lf' , '--lossfunction', metavar='lossfunction',nargs='?', default='binary_crossentropy', const='binary_crossentropy', help='loss function for the Model')
 parser.add_argument('-opt' , '--optimizer', metavar='optimizer',nargs='?', default="Adam", const="Adam", help='optimizer function for the model')
-parser.add_argument('-lr' , '--learningrate' , type=float, metavar='learningrate',nargs='?', default= 1e-4, const= 1e-4, help='learning rate for the model')
+#parser.add_argument('-lr' , '--learningrate' , type=float, metavar='learningrate',nargs='?', default= 1e-4, const= 1e-4, help='learning rate for the model')
 parser.add_argument('-tf' , '--topologyfactor', type=float, metavar='topologyfactor',nargs='?', default=2, const=1, help='')
 args = parser.parse_args()
 
@@ -27,14 +27,15 @@ data_gen_args = dict(rotation_range=0.2,
 
 myGene = trainGenerator(args.batchsize,'data/membrane/train','image','label',data_gen_args,save_to_dir = None)
 
-model = unet(args.lossfunction, args.optimizer, args.learningrate, args.topologyfactor)
+model = unet(args.lossfunction, args.optimizer, args.topologyfactor)
 dirpath = '/scratch/tmp/m_kais13/checkpoints'
 os.makedirs(dirpath, exist_ok=True)
-filename = 'bs{0}-lf{1}-opt{2}-lr{3}-tf{4}.h5'.format(args.batchsize,args.lossfunction,args.optimizer,args.learningrate, args.topologyfactor)
+filename = 'bs{0}-lf{1}-opt{2}-tf{3}.h5'.format(args.batchsize,args.lossfunction,args.optimizer, args.topologyfactor)
+cb_reduceLR = tf.keras.callbacks.ReduceLROnPlateau(monitor="loss", patience=3, mode="auto", min_lr=1e-6)
 cb_checkpointer = ModelCheckpoint(filepath = os.path.join(dirpath, filename), monitor = 'loss', save_best_only = False, mode = 'auto', verbose=1)
 #model_checkpoint = ModelCheckpoint("/scratch/tmp/m_kais13/checkpoints/unetmembranetest.h5", monitor='loss',verbose=1, save_best_only=False)
 num_images = 30
-model.fit_generator(myGene,steps_per_epoch=(num_images/args.batchsize),epochs=args.epochs,callbacks=[cb_checkpointer])
+model.fit_generator(myGene,steps_per_epoch=(num_images/args.batchsize),epochs=args.epochs,callbacks=[cb_checkpointer,cb_reduceLR])
 #model.fit_generator(myGene,steps_per_epoch=args.steps,epochs=args.epochs)
 #model.save("/scratch/tmp/m_kais13/checkpoints/unetmembranetest")
 

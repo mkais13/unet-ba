@@ -39,7 +39,7 @@ def FocalLoss(y_true, y_pred, alpha=ALPHA, gamma=GAMMA):
     return focal_loss
 
 
-def unet(loss_function, optimizer, learning_rate, topology_factor, pretrained_weights = None, input_size = (256,256,1)):
+def unet(loss_function, optimizer, topology_factor, pretrained_weights = None, input_size = (256,256,1)):
     inputs = Input(input_size)
     conv1 = Conv2D(int(64 * topology_factor), 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(inputs)
     conv1 = Conv2D(int(64* topology_factor), 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv1)
@@ -84,11 +84,11 @@ def unet(loss_function, optimizer, learning_rate, topology_factor, pretrained_we
     model = Model(input = inputs, output = conv10)
 
     if optimizer == "Adagrad" :
-        optimizer_function = Adagrad(learning_rate)
+        optimizer_function = Adagrad(1e-2)
     elif loss_function == "SGD":
-        optimizer_function = SGD(learning_rate)
+        optimizer_function = SGD(1e-2)
     else:
-        optimizer_function = Adam(learning_rate)
+        optimizer_function = Adam(1e-2)
 
     #checks if its a custom loss-function or one provided by keras
 
