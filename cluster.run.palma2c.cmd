@@ -18,7 +18,7 @@
 
 #SBATCH --job-name=mk13_{i}_{log_name}
 
-#SBATCH --output=/scratch/tmp/m_kais13/slogs/{log_name}.log
+#SBATCH --output=/scratch/tmp/m_kais13/slogs/{log_name}_{identifier}.log
 
 #SBATCH --mail-type=ALL
 
