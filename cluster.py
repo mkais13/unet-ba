@@ -77,13 +77,13 @@ kernelinitializers = [
 ]
 
 
-#for bs in batchsizes:
- #   for lf in lossfunctions:
-#        for opt in optimizers:
-#            for tf in topologyfactors:
-#                for ki in kernelinitializers:
-#                    commands.append("main.py -e 5 -bs {0} -lf {1} -opt {2} -tf {3} -ki {4} ".format(bs,lf,opt,tf,ki))
-commands.append("main.py -e 5 -bs {0} -lf {1} -opt {2} -tf {3} -ki {4} ".format(2,"mean_squared_error","SGD",0.5,"he_uniform"))
+for bs in batchsizes:
+    for lf in lossfunctions:
+        for opt in optimizers:
+            for tf in topologyfactors:
+                for ki in kernelinitializers:
+                    commands.append("main.py -e 5 -bs {0} -lf {1} -opt {2} -tf {3} -ki {4} ".format(bs,lf,opt,tf,ki))
+#commands.append("main.py -e 5 -bs {0} -lf {1} -opt {2} -tf {3} -ki {4} ".format(2,"mean_squared_error","SGD",0.5,"he_uniform"))
 
 
 ssh = get_ssh_connection(HOSTS[0])
