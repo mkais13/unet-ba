@@ -88,7 +88,7 @@ commands.append("main.py -e 5 -bs {0} -lf {1} -opt {2} -tf {3} -ki {4} ".format(
 
 ssh = get_ssh_connection(HOSTS[0])
 for i, c in enumerate(commands):
-    submit_python_script(ssh, HOSTS[0], SLURM_SCRIPTS[0], PROJECT_PATHS[0], c, tasks_per_node=8, mem=32, partition='gpu2080', git_push=True if i == 0 else False, time='0:20:00')
+    submit_python_script(ssh, HOSTS[0], SLURM_SCRIPTS[0], PROJECT_PATHS[0], c, tasks_per_node=8, mem=32, partition='gpu2080', git_push=True if i == 0 else False, time='0:05:00')
 ssh.close()
 
     # os.system("python train.py {}".format(c))
