@@ -35,7 +35,7 @@ def submit_python_script(ssh, host, slurm_script, project_path, command, tasks_p
     i = len(stdout.readlines())
     now = datetime.now()
     log_name = now.strftime("%Y-%m-%d_%H-%M-%S")
-    cmd = cmd_template.format(i=i, time=time, project_path=project_path, python_script=command, tasks_per_node=tasks_per_node, mem=mem, partition=partition, log_name=log_name)
+    cmd = cmd_template.format(i=i, time=time, project_path=project_path, python_script=command, tasks_per_node=tasks_per_node, mem=mem, partition=partition, log_name=log_name, identifier=c)
     stdin, stdout, stderr = ssh.exec_command('echo "{}" | tee $HOME/jobs/run.cmd'.format(cmd))
     stdout.readlines()
     stdin, stdout, stderr = ssh.exec_command('sbatch $HOME/jobs/run.cmd')
