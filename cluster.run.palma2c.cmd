@@ -14,7 +14,7 @@
 
 #SBATCH --time={time}
 
-#SBATCH --comment {identifier}
+#SBATCH --comment={identifier}
 
 #SBATCH --job-name=mk13_{i}_{log_name}
 
