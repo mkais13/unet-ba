@@ -35,7 +35,7 @@ def submit_python_script(ssh, host, slurm_script, project_path, command, tasks_p
     i = len(stdout.readlines())
     now = datetime.now()
     log_name = now.strftime("%Y-%m-%d_%H-%M-%S")
-    cmd = cmd_template.format(i=i, time=time, project_path=project_path, python_script=command, tasks_per_node=tasks_per_node, mem=mem, partition=partition, log_name=log_name)
+    cmd = cmd_template.format(i=i, time=time, project_path=project_path, python_script=command, tasks_per_node=tasks_per_node, mem=mem, partition=partition, log_name=log_name, identifier=command)
     stdin, stdout, stderr = ssh.exec_command('echo "{}" | tee $HOME/jobs/run.cmd'.format(cmd))
     stdout.readlines()
     stdin, stdout, stderr = ssh.exec_command('sbatch $HOME/jobs/run.cmd')
@@ -77,13 +77,13 @@ kernelinitializers = [
 ]
 
 
-for bs in batchsizes:
-    for lf in lossfunctions:
-        for opt in optimizers:
-            for tf in topologyfactors:
-                for ki in kernelinitializers:
-                    commands.append("main.py -e 5 -bs {0} -lf {1} -opt {2} -tf {3} -ki {4} ".format(bs,lf,opt,tf,ki))
-#commands.append("main.py -e 5 -bs {0} -lf {1} -opt {2} -tf {3} -ki {4} ".format(2,"mean_squared_error","SGD",0.5,"he_uniform"))
+#for bs in batchsizes:
+#    for lf in lossfunctions:
+#        for opt in optimizers:
+#            for tf in topologyfactors:
+#                for ki in kernelinitializers:
+#                    commands.append("main.py -e 5 -bs {0} -lf {1} -opt {2} -tf {3} -ki {4} ".format(bs,lf,opt,tf,ki))
+commands.append("main.py -e 5 -bs {0} -lf {1} -opt {2} -tf {3} -ki {4} ".format(2,"mean_squared_error","SGD",0.5,"he_uniform"))
 
 
 ssh = get_ssh_connection(HOSTS[0])
