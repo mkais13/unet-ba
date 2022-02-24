@@ -27,7 +27,7 @@ data_gen_args = dict(rotation_range=0.2,
                 
 
 
-myGene = trainGenerator(args.batchsize,'data/membrane/train','image','label',data_gen_args,save_to_dir = None)
+myGene = trainGenerator(args.batchsize,'data/membrane/train','image','label',save_to_dir = None)
 
 model = unet(args.lossfunction, args.optimizer, args.topologyfactor, args.kernelinitializer)
 dirpath = '/scratch/tmp/m_kais13/checkpoints'
@@ -44,4 +44,4 @@ model.fit_generator(myGene,steps_per_epoch=(num_images/args.batchsize),epochs=ar
 
 testGene = testGenerator("data/membrane/test")
 results = model.predict_generator(testGene,30,verbose=1)
-#saveResult("data/membrane/test",results)
+saveResult(os.path.join(dirpath,"result"+filename),results)
