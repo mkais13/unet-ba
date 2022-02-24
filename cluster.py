@@ -20,7 +20,7 @@ SLURM_SCRIPTS = [
 def get_ssh_connection(host):
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(host, username='m_kais13', pkey=paramiko.RSAKey.from_private_key_file("C:/Users/momok/.ssh/id_rsa"))
+    ssh.connect(host, username='m_kais13', pkey=paramiko.RSAKey.from_private_key_file("C:/Users/mkaiser/.ssh/id_rsaoldformat"))
     return ssh
 
  
@@ -61,8 +61,6 @@ topologyfactors = [
 
 
 batchsizes = [
-    3, 
-    10, 
     30
 ]
 
