@@ -45,6 +45,6 @@ model.fit_generator(myGene,steps_per_epoch=(num_images/args.batchsize),epochs=ar
 #model.fit_generator(myGene,steps_per_epoch=args.steps,epochs=args.epochs)
 #model.save("/scratch/tmp/m_kais13/checkpoints/unetmembranetest")
 
-testGene = testGenerator("data/membrane/test")
+testGene = testGenerator("/home/m/m_kais13/unet/data/membrane/test")
 results = model.predict_generator(testGene,30,verbose=1)
 saveResult(resultpath,results)
