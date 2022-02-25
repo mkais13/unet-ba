@@ -30,18 +30,22 @@ data_gen_args = dict(rotation_range=0.2,
 myGene = trainGenerator(args.batchsize,'data/membrane/train','image','label',dict(),save_to_dir = None)
 
 model = unet(args.lossfunction, args.optimizer, args.topologyfactor, args.kernelinitializer)
-dirpath = '/scratch/tmp/m_kais13/checkpoints'
-os.makedirs(dirpath, exist_ok=True)
-filename = 'bs{0}-lf{1}-opt{2}-tf{3}-ki{4}'.format(args.batchsize,args.lossfunction,args.optimizer, args.topologyfactor, args.kernelinitializer)
-cb_checkpointer = ModelCheckpoint(filepath = os.path.join(dirpath,filename+"-e{epoch}.h5"), monitor = 'loss', mode = 'auto', verbose=1)
+checkpointpath = '/scratch/tmp/m_kais13/checkpoints'
+tensorboardpath = '/scratch/tmp/m_kais13/losslogs'
+resultpath = '/scratch/tmp/m_kais13/results'
+os.makedirs(tensorboardpath, exist_ok=True)
+os.makedirs(checkpointpath, exist_ok=True)
+os.makedirs(resultpath, exist_ok=True)
+run_identifier = 'bs{0}-lf{1}-opt{2}-tf{3}-ki{4}'.format(args.batchsize,args.lossfunction,args.optimizer, args.topologyfactor, args.kernelinitializer)
+cb_tensorboard = TensorBoard(log_dir= os.path.join(tensorboardpath, run_identifier))
+cb_checkpointer = ModelCheckpoint(filepath = os.path.join(checkpointpath,run_identifier+"-e{epoch}.h5"), monitor = 'loss', mode = 'auto', verbose=1)
 #model_checkpoint = ModelCheckpoint("/scratch/tmp/m_kais13/checkpoints/unetmembranetest.h5", monitor='loss',verbose=1, save_best_only=False)
 num_images = 30
-model.fit_generator(myGene,steps_per_epoch=(num_images/args.batchsize),epochs=args.epochs,callbacks=[cb_checkpointer])
-#init_op = tf.initialize_all_variables()
+model.fit_generator(myGene,steps_per_epoch=(num_images/args.batchsize),epochs=args.epochs,callbacks=[cb_checkpointer, cb_tensorboard])
 
 #model.fit_generator(myGene,steps_per_epoch=args.steps,epochs=args.epochs)
 #model.save("/scratch/tmp/m_kais13/checkpoints/unetmembranetest")
 
 testGene = testGenerator("data/membrane/test")
 results = model.predict_generator(testGene,30,verbose=1)
-saveResult(os.path.join(dirpath,"result"+filename),results)
+saveResult(os.path.join(resultpath,run_identifier),results)

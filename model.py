@@ -5,7 +5,7 @@ import skimage.transform as trans
 from keras.models import *
 from keras.layers import *
 from keras.optimizers import *
-from keras.callbacks import ModelCheckpoint, LearningRateScheduler
+from keras.callbacks import ModelCheckpoint, LearningRateScheduler, TensorBoard
 from keras import backend as keras
 import losses
 #custom loss functions
@@ -111,7 +111,6 @@ def unet(loss_function, optimizer, topology_factor, kernel_init, pretrained_weig
     #model.summary()
 
     if(pretrained_weights):
-    	model.load_weights(pretrained_weights)
-
+        model.load_weights(pretrained_weights)
     return model
 
