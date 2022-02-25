@@ -48,4 +48,4 @@ model.fit_generator(myGene,steps_per_epoch=(num_images/args.batchsize),epochs=ar
 
 testGene = testGenerator("data/membrane/test")
 results = model.predict_generator(testGene,30,verbose=1)
-saveResult(os.path.join(resultpath,run_identifier),results)
+saveResult(resultpath,results)
