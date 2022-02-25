@@ -27,7 +27,7 @@ data_gen_args = dict(rotation_range=0.2,
                 
 
 
-myGene = trainGenerator(args.batchsize,'data/membrane/train','image','label',save_to_dir = None)
+myGene = trainGenerator(args.batchsize,'data/membrane/train','image','label',dict(),save_to_dir = None)
 
 model = unet(args.lossfunction, args.optimizer, args.topologyfactor, args.kernelinitializer)
 dirpath = '/scratch/tmp/m_kais13/checkpoints'
