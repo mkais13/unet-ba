@@ -78,7 +78,7 @@ def unet(loss, optimizer, topology_factor, kernel_init, pretrained_weights = Non
     merge9 = concatenate([conv1,up9], axis = 3)
     conv9 = Conv2D(int(64* topology_factor), 3, activation = 'relu', padding = 'same', kernel_initializer = kernel_init)(merge9)
     conv9 = Conv2D(int(64* topology_factor), 3, activation = 'relu', padding = 'same', kernel_initializer = kernel_init)(conv9)
-    conv9 = Conv2D(2, 3, activation = 'relu', padding = 'same', kernel_initializer = kernel_init)(conv9)
+    conv9 = Conv2D(int(topology_factor*2), 3, activation = 'relu', padding = 'same', kernel_initializer = kernel_init)(conv9)
     conv10 = Conv2D(1, 1, activation = 'sigmoid')(conv9)
 
     model = Model(input = inputs, output = conv10)
