@@ -58,7 +58,7 @@ optimizers = [
 topologyfactors = [
     0.5, 
     1, 
-    2
+    1.5
 ]
 
 
