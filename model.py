@@ -107,7 +107,7 @@ def unet(loss_function, optimizer, topology_factor, kernel_init, pretrained_weig
 
     model.compile(optimizer = optimizer_function, loss = loss_function, metrics = ['accuracy'])
     
-    #model.summary()
+    model.summary()
 
     if(pretrained_weights):
         model.load_weights(pretrained_weights)

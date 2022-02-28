@@ -20,7 +20,7 @@ SLURM_SCRIPTS = [
 def get_ssh_connection(host):
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(host, username='m_kais13', pkey=paramiko.RSAKey.from_private_key_file("C:/Users/mkaiser/.ssh/id_rsaoldformat"))
+    ssh.connect(host, username='m_kais13', pkey=paramiko.RSAKey.from_private_key_file("C:/Users/momok/.ssh/id_rsa"))
     return ssh
 
  
@@ -77,13 +77,13 @@ kernelinitializers = [
 ]
 
 
-for bs in batchsizes:
-    for lf in lossfunctions:
-        for opt in optimizers:
-            for tf in topologyfactors:
-                for ki in kernelinitializers:
-                    commands.append("main.py -e 5 -bs {0} -lf {1} -opt {2} -tf {3} -ki {4} ".format(bs,lf,opt,tf,ki))
-#commands.append("main.py -e 5 -bs {0} -lf {1} -opt {2} -tf {3} -ki {4} ".format(2,"mean_squared_error","SGD",0.5,"he_uniform"))
+#for bs in batchsizes:
+#    for lf in lossfunctions:
+#        for opt in optimizers:
+#            for tf in topologyfactors:
+#                for ki in kernelinitializers:
+#                    commands.append("main.py -e 5 -bs {0} -lf {1} -opt {2} -tf {3} -ki {4} ".format(bs,lf,opt,tf,ki))
+commands.append("main.py -e 5 -bs {0} -lf {1} -opt {2} -tf {3} -ki {4} ".format(10,"mean_squared_error","SGD",0.5,"he_uniform"))
 
 
 ssh = get_ssh_connection(HOSTS[0])
