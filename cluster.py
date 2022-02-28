@@ -85,7 +85,7 @@ kernelinitializers = [
 #            for tf in topologyfactors:
 #                for ki in kernelinitializers:
 #                    commands.append("main.py -e 5 -bs {0} -lf {1} -opt {2} -tf {3} -ki {4} ".format(bs,lf,opt,tf,ki))
-commands.append("main.py -e 5 -bs {0} -lf {1} -opt {2} -tf {3} -ki {4} ".format(10,"binary_crossentropy","Adam",1,"he_uniform"))
+commands.append("main.py -e 5 -bs {0} -lf {1} -opt {2} -tf {3} -ki {4} ".format(10,"mean_squared_error","SDG",1,"he_uniform"))
 
 
 
