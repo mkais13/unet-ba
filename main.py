@@ -40,7 +40,7 @@ cb_tensorboard = TensorBoard(log_dir= os.path.join(tensorboardpath, run_identifi
 cb_checkpointer = ModelCheckpoint(filepath = os.path.join(checkpointpath,run_identifier+"-e{epoch}.h5"), monitor = 'loss', mode = 'auto', verbose=1)
 #model_checkpoint = ModelCheckpoint("/scratch/tmp/m_kais13/checkpoints/unetmembranetest.h5", monitor='loss',verbose=1, save_best_only=False)
 num_images = 30
-model.fit_generator(myGene,steps_per_epoch=(num_images/args.batchsize),epochs=args.epochs,callbacks=[cb_checkpointer, cb_tensorboard])
+model.fit_generator(myGene,300,epochs=args.epochs,callbacks=[cb_checkpointer, cb_tensorboard])
 
 #model.fit_generator(myGene,steps_per_epoch=args.steps,epochs=args.epochs)
 #model.save("/scratch/tmp/m_kais13/checkpoints/unetmembranetest")
