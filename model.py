@@ -104,6 +104,8 @@ def unet(loss, optimizer, topology_factor, kernel_init, pretrained_weights = Non
         loss_function = losses.tversky
     elif loss == "focal_tversky":
         loss_function = losses.focal_tversky
+    elif loss == "msssim":
+        loss_function = losses.ms_ssim
     else:
         loss_function = "binary_crossentropy"
 

@@ -9,7 +9,7 @@ import argparse
 parser = argparse.ArgumentParser(description='set Hyperparameters for training')
 parser.add_argument('-e' , '--epochs', type=int, metavar='epochs', nargs='?', default=1, const=1, help='Number of Epochs')
 #parser.add_argument('-s' , '--steps', type=int, metavar='steps', nargs='?', default=300, const=300, help='Number of Steps per Epoch')
-parser.add_argument('-bs' , '--batchsize', type=int, metavar='batchsize',nargs='?', default=2, const=2, help='Batch Size')
+parser.add_argument('-bs' , '--batchsize', type=int, metavar='batchsize',nargs='?', default=3, const=3, help='Batch Size')
 parser.add_argument('-lf' , '--lossfunction', metavar='lossfunction',nargs='?', default='binary_crossentropy', const='binary_crossentropy', help='loss function for the Model')
 parser.add_argument('-ki' , '--kernelinitializer', metavar='kernelinitializer',nargs='?', default='he_normal', const='he_normal', help='kernel initializer for the Model')
 parser.add_argument('-opt' , '--optimizer', metavar='optimizer',nargs='?', default="Adam", const="Adam", help='optimizer function for the model')
@@ -32,7 +32,7 @@ run_identifier = 'bs{0}-lf{1}-opt{2}-tf{3}-ki{4}'.format(args.batchsize,args.los
 model = unet(args.lossfunction, args.optimizer, args.topologyfactor, args.kernelinitializer)
 checkpointpath = '/scratch/tmp/m_kais13/checkpoints/' + run_identifier
 tensorboardpath = '/scratch/tmp/m_kais13/losslogs'
-resultpath = '/scratch/tmp/m_kais13/results/' + run_identifier
+resultpath = '/scratch/tmp/m_kais13/results2/' + run_identifier
 os.makedirs(tensorboardpath, exist_ok=True)
 os.makedirs(checkpointpath, exist_ok=True)
 os.makedirs(resultpath, exist_ok=True)
@@ -40,8 +40,7 @@ cb_tensorboard = TensorBoard(log_dir= os.path.join(tensorboardpath, run_identifi
 cb_checkpointer = ModelCheckpoint(filepath = os.path.join(checkpointpath,run_identifier+"-e{epoch}.h5"), monitor = 'loss', mode = 'auto', verbose=1)
 #model_checkpoint = ModelCheckpoint("/scratch/tmp/m_kais13/checkpoints/unetmembranetest.h5", monitor='loss',verbose=1, save_best_only=False)
 num_images = 30
-model.fit_generator(myGene,300,epochs=args.epochs,callbacks=[cb_checkpointer, cb_tensorboard])
-
+model.fit_generator(myGene,(num_images/args.batchsize)*10,epochs=args.epochs,callbacks=[cb_checkpointer, cb_tensorboard])
 #model.fit_generator(myGene,steps_per_epoch=args.steps,epochs=args.epochs)
 #model.save("/scratch/tmp/m_kais13/checkpoints/unetmembranetest")
 
