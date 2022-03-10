@@ -10,11 +10,11 @@ parser = argparse.ArgumentParser(description='set Hyperparameters for training')
 parser.add_argument('-e' , '--epochs', type=int, metavar='epochs', nargs='?', default=1, const=1, help='Number of Epochs')
 #parser.add_argument('-s' , '--steps', type=int, metavar='steps', nargs='?', default=300, const=300, help='Number of Steps per Epoch')
 parser.add_argument('-bs' , '--batchsize', type=int, metavar='batchsize',nargs='?', default=3, const=3, help='Batch Size')
-parser.add_argument('-lf' , '--lossfunction', metavar='lossfunction',nargs='?', default='binary_crossentropy', const='binary_crossentropy', help='loss function for the Model')
+parser.add_argument('-lf' , '--lossfunction', metavar='lossfunction',nargs='?', default='msssim', const='msssim', help='loss function for the Model')
 parser.add_argument('-ki' , '--kernelinitializer', metavar='kernelinitializer',nargs='?', default='he_normal', const='he_normal', help='kernel initializer for the Model')
 parser.add_argument('-opt' , '--optimizer', metavar='optimizer',nargs='?', default="Adam", const="Adam", help='optimizer function for the model')
 #parser.add_argument('-lr' , '--learningrate' , type=float, metavar='learningrate',nargs='?', default= 1e-4, const= 1e-4, help='learning rate for the model')
-parser.add_argument('-tf' , '--topologyfactor', type=float, metavar='topologyfactor',nargs='?', default=0.5, const=1, help='')
+parser.add_argument('-tf' , '--topologyfactor', type=float, metavar='topologyfactor',nargs='?', default=1.0, const=1, help='')
 args = parser.parse_args()
 
 data_gen_args = dict(rotation_range=0.2,

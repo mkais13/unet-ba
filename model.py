@@ -19,6 +19,10 @@ def DiceLoss(y_true, y_pred, smooth=0):
     return 1 - (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
 
 
+def ms_ssimLoss(y_true, y_pred, **kwargs):
+    tf_ms_ssim = tf.image.ssim_multiscale(y_true, y_pred, max_val=256, **kwargs)    
+    return 1 - tf_ms_ssim
+
 
 def IoULoss(y_true, y_pred, smooth=1e-6):
     y_true_f = K.flatten(y_true)
@@ -105,7 +109,7 @@ def unet(loss, optimizer, topology_factor, kernel_init, pretrained_weights = Non
     elif loss == "focal_tversky":
         loss_function = losses.focal_tversky
     elif loss == "msssim":
-        loss_function = losses.ms_ssim
+        loss_function = ms_ssimLoss
     else:
         loss_function = "binary_crossentropy"
 
