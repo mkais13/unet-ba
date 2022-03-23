@@ -39,6 +39,7 @@ os.makedirs(resultpath, exist_ok=True)
 
 
 validGene = validGenerator(args.batchsize, "data/membrane/train", "image", "label")
+validGene2 = validGenerator(args.batchsize, "data/membrane/train", "image", "label")
 
 class TensorBoardWrapper(TensorBoard):
     '''Sets the self.validation_data property for use with TensorBoard callback.'''
@@ -73,7 +74,7 @@ class TensorBoardWrapper(TensorBoard):
 
 
 
-cb_tensorboard = TensorBoardWrapper(validGene,int(num_images/args.batchsize), args.batchsize, log_dir= os.path.join(tensorboardpath, run_identifier), histogram_freq=1, batch_size=args.batchsize)
+cb_tensorboard = TensorBoardWrapper(validGene2,int(num_images/args.batchsize), args.batchsize, log_dir= os.path.join(tensorboardpath, run_identifier), histogram_freq=1, batch_size=args.batchsize)
 
 #cb_tensorboard = TensorBoard(log_dir= os.path.join(tensorboardpath, run_identifier), histogram_freq=1,write_grads=True, write_graph=True)
 cb_checkpointer = ModelCheckpoint(filepath = os.path.join(checkpointpath,run_identifier+"-e{epoch}.h5"), monitor = 'loss', mode = 'auto', verbose=1)
