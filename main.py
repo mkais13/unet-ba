@@ -1,6 +1,7 @@
 from model import *
 from data import *
 import os
+import math
 import argparse
 
 #os.environ["CUDA_VISIBLE_DEVICES"] = "0"
@@ -30,9 +31,9 @@ num_images = 30
 myGene = trainGenerator(args.batchsize,'data/membrane/train','image','label',data_gen_args,save_to_dir = None)
 run_identifier = 'bs{0}-lf{1}-opt{2}-tf{3}-ki{4}'.format(args.batchsize,args.lossfunction,args.optimizer, args.topologyfactor, args.kernelinitializer)
 model = unet(args.lossfunction, args.optimizer, args.topologyfactor, args.kernelinitializer)
-checkpointpath = '/scratch/tmp/m_kais13/run3/checkpoints/' + run_identifier
-tensorboardpath = '/scratch/tmp/m_kais13/run3/losslogs'
-resultpath = '/scratch/tmp/m_kais13/run3/results/' + run_identifier
+checkpointpath = '/scratch/tmp/m_kais13/run4/checkpoints/' + run_identifier
+tensorboardpath = '/scratch/tmp/m_kais13/run4/losslogs'
+resultpath = '/scratch/tmp/m_kais13/run4/results/' + run_identifier
 os.makedirs(tensorboardpath, exist_ok=True)
 os.makedirs(checkpointpath, exist_ok=True)
 os.makedirs(resultpath, exist_ok=True)
@@ -42,13 +43,12 @@ validGene = validGenerator(args.batchsize, "data/membrane/train", "image", "labe
 validGene2 = validGenerator(args.batchsize, "data/membrane/train", "image", "label")
 
 class TensorBoardWrapper(TensorBoard):
-    '''Sets the self.validation_data property for use with TensorBoard callback.'''
 
     def __init__(self, batch_gen, nb_steps, b_size, **kwargs):
         super(TensorBoardWrapper, self).__init__(**kwargs)
         self.batch_gen = batch_gen # The generator.
         self.nb_steps = nb_steps   # Number of times to call next() on the generator.
-        #self.batch_size = b_size
+        self.batch_size = b_size
 
     def on_epoch_end(self, epoch, logs):
         # Fill in the `validation_data` property. Obviously this is specific to how your generator works.
@@ -74,7 +74,7 @@ class TensorBoardWrapper(TensorBoard):
 
 
 
-cb_tensorboard = TensorBoardWrapper(validGene2,int(num_images/args.batchsize), args.batchsize, log_dir= os.path.join(tensorboardpath, run_identifier), histogram_freq=1, batch_size=args.batchsize)
+cb_tensorboard = TensorBoardWrapper(validGene2,math.ceil(num_images/args.batchsize), args.batchsize, log_dir= os.path.join(tensorboardpath, run_identifier), histogram_freq=1, batch_size=args.batchsize)
 
 #cb_tensorboard = TensorBoard(log_dir= os.path.join(tensorboardpath, run_identifier), histogram_freq=1,write_grads=True, write_graph=True)
 cb_checkpointer = ModelCheckpoint(filepath = os.path.join(checkpointpath,run_identifier+"-e{epoch}.h5"), monitor = 'loss', mode = 'auto', verbose=1)
