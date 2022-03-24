@@ -31,9 +31,9 @@ num_images = 30
 myGene = trainGenerator(args.batchsize,'data/membrane/train','image','label',data_gen_args,save_to_dir = None)
 run_identifier = 'bs{0}-lf{1}-opt{2}-tf{3}-ki{4}'.format(args.batchsize,args.lossfunction,args.optimizer, args.topologyfactor, args.kernelinitializer)
 model = unet(args.lossfunction, args.optimizer, args.topologyfactor, args.kernelinitializer)
-checkpointpath = '/scratch/tmp/m_kais13/run4/checkpoints/' + run_identifier
-tensorboardpath = '/scratch/tmp/m_kais13/run4/losslogs'
-resultpath = '/scratch/tmp/m_kais13/run4/results/' + run_identifier
+checkpointpath = '/scratch/tmp/m_kais13/run5/checkpoints/' + run_identifier
+tensorboardpath = '/scratch/tmp/m_kais13/run5/losslogs'
+resultpath = '/scratch/tmp/m_kais13/run5/results/' + run_identifier
 os.makedirs(tensorboardpath, exist_ok=True)
 os.makedirs(checkpointpath, exist_ok=True)
 os.makedirs(resultpath, exist_ok=True)
