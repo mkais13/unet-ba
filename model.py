@@ -19,6 +19,10 @@ def DiceLoss(y_true, y_pred, smooth=0):
     return 1 - (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
 
 
+def ms_ssimLoss(y_true, y_pred, **kwargs):
+    tf_ms_ssim = tf.image.ssim_multiscale(y_true, y_pred, max_val=256, **kwargs)    
+    return 1 - tf_ms_ssim
+
 
 def IoULoss(y_true, y_pred, smooth=1e-6):
     y_true_f = K.flatten(y_true)
@@ -39,7 +43,7 @@ def FocalLoss(y_true, y_pred, alpha=ALPHA, gamma=GAMMA):
     return focal_loss
 
 
-def unet(loss_function, optimizer, topology_factor, kernel_init, pretrained_weights = None, input_size = (256,256,1)):
+def unet(loss, optimizer, topology_factor, kernel_init, pretrained_weights = None, input_size = (256,256,1)):
     inputs = Input(input_size)
     conv1 = Conv2D(int(64 * topology_factor), 3, activation = 'relu', padding = 'same', kernel_initializer = kernel_init)(inputs)
     conv1 = Conv2D(int(64* topology_factor), 3, activation = 'relu', padding = 'same', kernel_initializer = kernel_init)(conv1)
@@ -64,7 +68,7 @@ def unet(loss_function, optimizer, topology_factor, kernel_init, pretrained_weig
     conv6 = Conv2D(int(512* topology_factor), 3, activation = 'relu', padding = 'same', kernel_initializer = kernel_init)(merge6)
     conv6 = Conv2D(int(512* topology_factor), 3, activation = 'relu', padding = 'same', kernel_initializer = kernel_init)(conv6)
 
-    up7 = Conv2D(256, 2, activation = 'relu', padding = 'same', kernel_initializer = kernel_init)(UpSampling2D(size = (2,2))(conv6))
+    up7 = Conv2D(int(256* topology_factor), 2, activation = 'relu', padding = 'same', kernel_initializer = kernel_init)(UpSampling2D(size = (2,2))(conv6))
     merge7 = concatenate([conv3,up7], axis = 3)
     conv7 = Conv2D(int(256* topology_factor), 3, activation = 'relu', padding = 'same', kernel_initializer = kernel_init)(merge7)
     conv7 = Conv2D(int(256* topology_factor), 3, activation = 'relu', padding = 'same', kernel_initializer = kernel_init)(conv7)
@@ -78,36 +82,41 @@ def unet(loss_function, optimizer, topology_factor, kernel_init, pretrained_weig
     merge9 = concatenate([conv1,up9], axis = 3)
     conv9 = Conv2D(int(64* topology_factor), 3, activation = 'relu', padding = 'same', kernel_initializer = kernel_init)(merge9)
     conv9 = Conv2D(int(64* topology_factor), 3, activation = 'relu', padding = 'same', kernel_initializer = kernel_init)(conv9)
-    conv9 = Conv2D(int(2* topology_factor), 3, activation = 'relu', padding = 'same', kernel_initializer = kernel_init)(conv9)
+    conv9 = Conv2D(int(topology_factor*2), 3, activation = 'relu', padding = 'same', kernel_initializer = kernel_init)(conv9)
     conv10 = Conv2D(1, 1, activation = 'sigmoid')(conv9)
 
-    model = Model(input = inputs, output = conv10)
+    model = Model(inputs = inputs, outputs = conv10)
 
    
+   
     if optimizer == "Adagrad" :
-        optimizer_function = Adagrad(1e-2)
-    elif loss_function == "SGD":
-        optimizer_function = SGD(1e-2)
+        optimizer_function = Adagrad(lr=1e-4)
+    elif optimizer == "SGD":
+        optimizer_function = SGD(lr=1e-4)
     else:
-        optimizer_function = Adam(1e-2)
+        optimizer_function = Adam(lr=1e-4)
 
     #checks if its a custom loss-function or one provided by keras
 
-    if loss_function == "iou":
+    if loss == "iou":
         loss_function = IoULoss
-    elif loss_function == "dice":
+    elif loss == "dice":
         loss_function = losses.dice
-    elif loss_function == "focal":
+    elif loss == "focal":
         loss_function = FocalLoss
-    elif loss_function == "tversky":
+    elif loss == "tversky":
         loss_function = losses.tversky
-    elif loss_function == "focal_tversky":
+    elif loss == "focal_tversky":
         loss_function = losses.focal_tversky
+    elif loss == "msssim":
+        loss_function = ms_ssimLoss
+    else:
+        loss_function = "binary_crossentropy"
 
 
     model.compile(optimizer = optimizer_function, loss = loss_function, metrics = ['accuracy'])
     
-    #model.summary()
+    model.summary()
 
     if(pretrained_weights):
         model.load_weights(pretrained_weights)
