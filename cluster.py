@@ -22,7 +22,7 @@ SLURM_SCRIPTS = [
 def get_ssh_connection(host):
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(host, username='m_kais13', pkey=paramiko.RSAKey.from_private_key_file("C:/Users/momok/.ssh/id_rsa"))
+    ssh.connect(host, username="###########", pkey=paramiko.RSAKey.from_private_key_file("###########"))
     return ssh
 
  
@@ -33,7 +33,7 @@ def submit_python_script(ssh, host, slurm_script, project_path, command, tasks_p
         os.system('git push')
         stdin, stdout, stderr = ssh.exec_command('cd {} && git pull && cd $HOME'.format(project_path))
         print(stdout.readlines())
-    stdin, stdout, stderr = ssh.exec_command('squeue | grep m_kais13')
+    stdin, stdout, stderr = ssh.exec_command('squeue | grep "###########"')
     i = len(stdout.readlines())
     now = datetime.now()
     log_name = now.strftime("%Y-%m-%d_%H-%M-%S")
@@ -43,7 +43,7 @@ def submit_python_script(ssh, host, slurm_script, project_path, command, tasks_p
     stdout.readlines()
     stdin, stdout, stderr = ssh.exec_command('sbatch $HOME/jobs/run.cmd')
     print(stdout.readlines()) 
-    stdin, stdout, stderr = ssh.exec_command('squeue | grep m_kais13')
+    stdin, stdout, stderr = ssh.exec_command('squeue | grep "###########"')
     print("submitted {} jobs".format(len(stdout.readlines())))
 
  
